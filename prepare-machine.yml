@@ -1,0 +1,14 @@
+---
+- name: Prepare Ubuntu machine
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: Update package lists
+      apt:
+        update_cache: yes
+
+    - name: Install htop
+      apt:
+        name: htop
+        state: present
+
