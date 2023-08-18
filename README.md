@@ -4,7 +4,7 @@ Ansible collection for SymPortal
 
 ## Usage
 
-`ansible-galaxy symportal-ansible `
+`ansible-playbook -i inventory.ini prepare-machine.yml --ask-become-pass`
 
 LICENSE: 3-clause BSD license.
 

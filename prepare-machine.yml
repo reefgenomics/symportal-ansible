@@ -1,6 +1,6 @@
 ---
 - name: Prepare Ubuntu machine
-  hosts: localhost
+  hosts: symportal
   become: yes
   tasks:
     - name: Update package lists
