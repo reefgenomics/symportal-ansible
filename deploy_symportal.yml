@@ -1,0 +1,8 @@
+---
+
+- name: Deploy SymPortal Project
+  hosts: all
+  become: yes
+
+  roles:
+    - symportal
