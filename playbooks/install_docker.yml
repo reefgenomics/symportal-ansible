@@ -2,6 +2,7 @@
 - name: Install Docker on Ubuntu
   hosts: symportal
   become: yes
+
   tasks:
     - name: Install required packages
       ansible.builtin.apt:

@@ -1,0 +1,83 @@
+version: "3"
+
+services:
+
+  database-{{ env }}:
+    image: postgres:15.3
+    ports:
+      - "{{ postgres_port }}:5432"
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    restart: always
+    container_name: ${SYMPORTAL_DATABASE_CONTAINER}-{{ env }}
+
+  flask-app-{{ env }}:
+    build:
+      context: ./flask_app
+    ports:
+      - "{{ flask-port }}:5000"
+    environment:
+      - CONTACT_EMAIL_ADDRESS=${CONTACT_EMAIL_ADDRESS}
+      - GOOGLE_MAPS_API_KEY=${GOOGLE_MAPS_API_KEY}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - SFTP_USERNAME=${SFTP_USERNAME}
+      - SFTP_PASSWORD=${SFTP_PASSWORD}
+      - SFTP_HOME=${SFTP_HOME}
+      - SENDGRID_API_KEY=${SENDGRID_API_KEY}
+      - SENDGRID_EMAIL_SENDER=${SENDGRID_EMAIL_SENDER}
+      - SYMPORTAL_DATABASE_CONTAINER=${SYMPORTAL_DATABASE_CONTAINER}-{{ env }}
+      - SYMPORTAL_SFTP_SERVER_CONTAINER=${SYMPORTAL_SFTP_SERVER_CONTAINER}-{{ env }}
+    depends_on:
+      - database-{{ env }}
+    volumes:
+      - /mnt/{{ env }}/explorer_data:/app/sp_app/explorer_data
+    container_name: ${SYMPORTAL_FLASK_CONTAINER}-{{ env }}
+
+  nginx-{{ env }}:
+    build:
+      context: ./nginx
+    ports:
+      - "{{ nginx_http_port }}:80"
+      - "{{ nginx_https_port }}:443"
+    environment:
+      - SYMPORTAL_FLASK_CONTAINER=${SYMPORTAL_FLASK_CONTAINER}-{{ env }}
+    volumes:
+      - /etc/ssl/symportal:/etc/nginx/certs:ro
+    depends_on:
+      - flask-app-{{ env }}
+    container_name: ${SYMPORTAL_NGINX_CONTAINER}-{{ env }}
+
+  symportal-framework-{{ env }}:
+    build:
+      context: ./symportal_framework
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - SFTP_USERNAME=${SFTP_USERNAME}
+      - SFTP_PASSWORD=${SFTP_PASSWORD}
+      - SFTP_HOME=${SFTP_HOME}
+      - SENDGRID_API_KEY=${SENDGRID_API_KEY}
+      - SENDGRID_EMAIL_SENDER=${SENDGRID_EMAIL_SENDER}
+      - SYMPORTAL_DATABASE_CONTAINER=${SYMPORTAL_DATABASE_CONTAINER}-{{ env }}
+      - SYMPORTAL_SFTP_SERVER_CONTAINER=${SYMPORTAL_SFTP_SERVER_CONTAINER}-{{ env }}
+    command: >
+      bash -c "./wait-for-db.sh && tail -f /dev/null"
+    depends_on:
+      - database-{{ env }}
+    volumes:
+      - /mnt/{{ env }}/:/mnt
+      - /mnt/{{ env }}/symbiodiniaceaeDB:/app/symbiodiniaceaeDB
+    container_name: ${SYMPORTAL_FRAMEWORK_CONTAINER}-{{ env }}
+
+  sftp-server-{{ env }}:
+    image: atmoz/sftp
+    ports:
+      - "{{ sftp_server_port }}:22"
+    environment:
+      - SFTP_USERS=${SFTP_USERNAME}:${SFTP_PASSWORD}:${SFTP_UID}:${SFTP_GID}:${SFTP_HOME}
+    container_name: ${SYMPORTAL_SFTP_SERVER_CONTAINER}-{{ env }}

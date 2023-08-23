@@ -9,7 +9,7 @@ LICENSE: 3-clause BSD license.
 To install and configure Docker on the new machine:
 
 ```commandline
-ansible-playbook -i inventory.ini prepare-machine.yml --ask-become-pass
+ansible-playbook -i inventories/inventory.ini playbooks/install_docker.yml --ask-become-pass
 ```
 
 To deploy SymPortal:
