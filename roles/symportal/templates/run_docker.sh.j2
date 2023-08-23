@@ -1,10 +1,10 @@
 #!/bin/bash
 
-echo "Killing old docker processes"
-docker compose rm -fs
+# echo "Killing old docker processes"
+# docker compose rm -fs
 
 echo "Building docker containers"
-docker compose up --build -d --remove-orphans
+docker compose up --build -d
 
 echo "Set up cron jobs"
 containers="flask-app-{{ env }} symportal-framework-{{ env }}"
