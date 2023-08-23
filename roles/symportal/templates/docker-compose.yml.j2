@@ -17,7 +17,7 @@ services:
     build:
       context: ./flask_app
     ports:
-      - "{{ flask-port }}:5000"
+      - "{{ flask_port }}:5000"
     environment:
       - CONTACT_EMAIL_ADDRESS=${CONTACT_EMAIL_ADDRESS}
       - GOOGLE_MAPS_API_KEY=${GOOGLE_MAPS_API_KEY}

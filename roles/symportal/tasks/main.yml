@@ -1,0 +1,50 @@
+---
+
+- name: Ensure Environment Directories Exist
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - "/opt/{{ env }}"
+    - "/mnt/{{ env }}"
+
+- name: Clone GitHub Repository
+  ansible.builtin.git:
+    repo: https://github.com/greenjune-ship-it/symportal-2.0.git
+    dest: "/opt/{{ env }}/symportal-2.0"
+    force: yes
+
+- name: Render Docker Compose File
+  ansible.builtin.template:
+    src: docker-compose.yml.j2
+    dest: "/opt/{{ env }}/symportal-2.0/docker-compose.yml"
+
+- name: Render NGINX Configuration File
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "/opt/{{ env }}/symportal-2.0/nginx/{{ item.dest }}"
+  loop:
+    - { src: nginx.conf.j2, dest: nginx.conf }
+    - { src: project.conf.j2, dest: project.conf }
+
+- name: Copy .env File
+  ansible.builtin.copy:
+    src: "/opt/.env"
+    dest: "/opt/{{ env }}/symportal-2.0/.env"
+    mode: '0600'  # Set permissions to read/write only for owner
+    remote_src: yes
+
+- name: Render Deploy Script
+  ansible.builtin.template:
+    src: run_docker.sh.j2
+    dest: "/opt/{{ env }}/symportal-2.0/run_docker.sh"
+
+#- name: Create and Start Docker Compose Services
+#  community.docker.docker_compose:
+#    project_src: "/opt/{{ env }}/symportal-2.0"
+#  register: output
+#
+#- name: Show Results
+#  ansible.builtin.debug:
+#    var: output
