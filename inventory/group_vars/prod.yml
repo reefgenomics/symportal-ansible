@@ -1,0 +1,5 @@
+postgres_port: 5432
+nginx_http_port: 80
+nginx_https_port: 443
+sftp_server_port: 2222
+flask_port: 5000

@@ -15,8 +15,9 @@ ansible-playbook -i inventory.ini install_docker.yml --ask-become-pass
 To deploy SymPortal:
 
 ```commandline
-ansible-playbook -i inventory.ini ...
-
+ansible-playbook -i inventory/dev.ini deploy_symportal.yml --ask-become-pass
+ansible-playbook -i inventory/test.ini deploy_symportal.yml --ask-become-pass
+ansible-playbook -i inventory/prod.ini deploy_symportal.yml --ask-become-pass
 ```
 
 ## CONTRIBUTING
