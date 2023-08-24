@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# echo "Killing old docker processes"
-# docker compose rm -fs
+# echo "Stop and remove previous {{ env }} containers"
+docker ps -a --format {% raw %}"{{.ID}} {{.Names}}"{% endraw %} | grep -- '-{{ env }}$' | awk '{print $1}' | xargs docker stop
+docker ps -a --format {% raw %}"{{.ID}} {{.Names}}"{% endraw %} | grep -- '-{{ env }}$' | awk '{print $1}' | xargs docker rm
 
 echo "Building docker containers"
 docker compose up --build -d
