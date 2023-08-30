@@ -62,8 +62,8 @@ http {
         listen 443 ssl;
         server_name spi-220.biologie.uni-konstanz.de;
 
-        ssl_certificate /etc/nginx/certs/spi-220.biologie.uni-konstanz.de.crt;
-        ssl_certificate_key /etc/nginx/certs/spi-220.biologie.uni-konstanz.de.key;
+        ssl_certificate /etc/nginx/certs/symportal.org.crt;
+        ssl_certificate_key /etc/nginx/certs/symportal.org.key;
 
         location / {
             proxy_pass http://symportal-flask-{{ env }}:5000;
