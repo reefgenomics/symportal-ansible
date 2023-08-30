@@ -4,18 +4,19 @@ services:
 
   database-{{ env }}:
     image: postgres:15.3
+    restart: unless-stopped
     ports:
       - "{{ postgres_port }}:5432"
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
-    restart: always
     container_name: ${SYMPORTAL_DATABASE_CONTAINER}-{{ env }}
 
   flask-app-{{ env }}:
     build:
       context: ./flask_app
+    restart: unless-stopped
     ports:
       - "{{ flask_port }}:5000"
     environment:
@@ -40,6 +41,7 @@ services:
   nginx-{{ env }}:
     build:
       context: ./nginx
+    restart: unless-stopped
     ports:
       - "{{ nginx_http_port }}:80"
       - "{{ nginx_https_port }}:443"
@@ -54,6 +56,7 @@ services:
   symportal-framework-{{ env }}:
     build:
       context: ./symportal_framework
+    restart: unless-stopped
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -76,6 +79,7 @@ services:
 
   sftp-server-{{ env }}:
     image: atmoz/sftp
+    restart: unless-stopped
     ports:
       - "{{ sftp_server_port }}:22"
     environment:
