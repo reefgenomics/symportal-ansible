@@ -15,6 +15,16 @@
     dest: "/opt/{{ env }}/symportal-2.0"
     force: yes
 
+  - name: Determine Branch Name
+    ansible.builtin.set_fact:
+      branch_to_checkout: "{{ 'develop' if env == 'dev' else 'main' }}"
+
+  - name: Checkout Branch
+    ansible.builtin.git:
+      repo: "/opt/{{ env }}/symportal-2.0"
+      dest: "/opt/{{ env }}/symportal-2.0"
+      version: "{{ branch_to_checkout }}"
+
 - name: Render Docker Compose File
   ansible.builtin.template:
     src: docker-compose.yml.j2
