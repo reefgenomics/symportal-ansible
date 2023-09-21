@@ -20,6 +20,7 @@ services:
     ports:
       - "{{ flask_port }}:5000"
     environment:
+      - ENV={{ env}}
       - CONTACT_EMAIL_ADDRESS=${CONTACT_EMAIL_ADDRESS}
       - GOOGLE_MAPS_API_KEY=${GOOGLE_MAPS_API_KEY}
       - POSTGRES_USER=${POSTGRES_USER}
