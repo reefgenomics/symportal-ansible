@@ -51,7 +51,7 @@ http {
     # HTTP server block to redirect to HTTPS
     server {
         listen 80;
-        server_name spi-220.biologie.uni-konstanz.de;
+        server_name symportal.org;
 
         # Redirect to HTTPS
         return 301 https://$host$request_uri;
@@ -60,7 +60,7 @@ http {
     # SSL configuration
     server {
         listen 443 ssl;
-        server_name spi-220.biologie.uni-konstanz.de;
+        server_name symportal.org;
 
         ssl_certificate /etc/nginx/certs/symportal.org.crt;
         ssl_certificate_key /etc/nginx/certs/symportal.org.key;
