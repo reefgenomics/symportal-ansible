@@ -1,7 +1,7 @@
 server {
 
     listen 80;
-    server_name spi-220.biologie.uni-konstanz symportal.org;
+    server_name symportal.org;
 
     location / {
         proxy_pass http://symportal-flask-{{ env }}:5000;
