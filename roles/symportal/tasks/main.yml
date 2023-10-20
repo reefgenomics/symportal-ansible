@@ -17,7 +17,8 @@
 
 - name: Determine Branch Name
   ansible.builtin.set_fact:
-    branch_to_checkout: "{{ 'develop' if env == 'dev' else 'main' }}"
+    # branch_to_checkout: "{{ 'develop' if env == 'dev' else 'main' }}"
+    branch_to_checkout: "main"
 
 - name: Checkout Branch
   ansible.builtin.git:
