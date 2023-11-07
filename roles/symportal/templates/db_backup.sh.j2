@@ -5,8 +5,8 @@ cd /opt/{{ env }}/symportal-2.0
 
 # PostgreSQL settings
 PG_CONTAINER="symportal-database-{{ env }}"
-PG_USER="postgres"
-PG_DB="postgres"
+PG_USER={{ pg_user }}
+PG_DB={{ pg_db }}
 
 # Backup directory
 BACKUP_DIR="/mnt/{{ env }}/db_backups"

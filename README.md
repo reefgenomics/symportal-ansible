@@ -17,7 +17,11 @@ To deploy SymPortal:
 ```commandline
 ansible-playbook -i inventory/dev.ini deploy_symportal.yml --ask-become-pass
 ansible-playbook -i inventory/test.ini deploy_symportal.yml --ask-become-pass
-ansible-playbook -i inventory/prod.ini deploy_symportal.yml --ask-become-pass
+
+ansible-playbook \
+    -i inventory/prod.ini deploy_symportal.yml \
+    -e pg_user='' -e pg_db='' \
+    --ask-become-pass
 ```
 
 ## CONTRIBUTING

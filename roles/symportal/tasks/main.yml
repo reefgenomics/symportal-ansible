@@ -63,6 +63,7 @@
     minute: 0
     hour: 0
     job: "/mnt/{{ env }}/db_backups/db_backup.sh"
+  when: env == "prod"
 
 #- name: Create and Start Docker Compose Services
 #  community.docker.docker_compose:
