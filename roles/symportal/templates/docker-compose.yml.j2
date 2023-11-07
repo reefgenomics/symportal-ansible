@@ -37,6 +37,7 @@ services:
       - database-{{ env }}
     volumes:
       - /mnt/{{ env }}/explorer_data:/app/sp_app/explorer_data
+      - /mnt/common:/app/sp_app/static/resources
     container_name: ${SYMPORTAL_FLASK_CONTAINER}-{{ env }}
 
   nginx-{{ env }}:
