@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Change the working directory to /opt/{{ env}}/symportal-2.0
+cd /opt/{{ env }}/symportal-2.0
+
+# PostgreSQL settings
+PG_CONTAINER="symportal-database-{{ env }}"
+PG_USER="postgres"
+PG_DB="postgres"
+
+# Backup directory
+BACKUP_DIR="/mnt/{{ env }}/db_backups"
+
+# Get the current date in the desired format (YYYYMMDD)
+CURRENT_DATE=$(date +\%Y\%m\%d)
+
+# Backup file naming convention with year, month, and day prefix
+BACKUP_FILE="$BACKUP_DIR/backup-$CURRENT_DATE.sql"
+
+# Perform the backup
+sudo docker exec $PG_CONTAINER pg_dump -U $PG_USER $PG_DB > $BACKUP_FILE

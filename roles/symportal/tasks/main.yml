@@ -51,6 +51,19 @@
     src: run_docker.sh.j2
     dest: "/opt/{{ env }}/symportal-2.0/run_docker.sh"
 
+- name: Render Backup Script
+  ansible.builtin.template:
+    src: db_backup.sh.j2
+    dest: "/mnt/{{ env }}/db_backups/db_backup.sh"
+
+- name: Add the Crontab Entry
+  ansible.builtin.cron:
+    name: "db_backup"
+    user: "root"
+    minute: 0
+    hour: 0
+    job: "/mnt/{{ env }}/db_backups/db_backup.sh"
+
 #- name: Create and Start Docker Compose Services
 #  community.docker.docker_compose:
 #    project_src: "/opt/{{ env }}/symportal-2.0"
