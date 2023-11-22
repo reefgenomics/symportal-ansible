@@ -65,6 +65,12 @@
     job: "/mnt/{{ env }}/db_backups/db_backup.sh"
   when: env == "prod"
 
+- name: Configure logrotate
+  ansible.builtin.copy:
+    src: "postgresql-backup"
+    dest: "/etc/logrotate.d/postgresql-backup"
+  when: env == "prod"
+
 #- name: Create and Start Docker Compose Services
 #  community.docker.docker_compose:
 #    project_src: "/opt/{{ env }}/symportal-2.0"
