@@ -16,6 +16,9 @@ for container in $containers; do
         crontab /app/cron/crontab"
 done
 
+echo "Copy example dataset to the Flask App"
+sudo docker cp /mnt/common/smith_et_al_ISMEJ_example_data.zip symportal-flask-{{ env }}:/app/sp_app/static/resources
+
 # Pause everything except the database service
 docker compose pause nginx-{{ env }} flask-app-{{ env }} symportal-framework-{{ env }}
 
