@@ -11,7 +11,7 @@
 
 - name: Clone GitHub Repository
   ansible.builtin.git:
-    repo: https://github.com/greenjune-ship-it/symportal-2.0.git
+    repo: https://github.com/reefgenomics/symportal-2.0.git
     dest: "/opt/{{ env }}/symportal-2.0"
     force: yes
 
