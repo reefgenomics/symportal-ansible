@@ -1,0 +1,8 @@
+/mnt/prod/db_backups/backup-*.sql {
+    daily
+    missingok
+    rotate 7
+    compress
+    notifempty
+    maxage 10
+}
