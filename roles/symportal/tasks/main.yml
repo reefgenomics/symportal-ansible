@@ -55,6 +55,7 @@
   ansible.builtin.template:
     src: db_backup.sh.j2
     dest: "/mnt/{{ env }}/db_backups/db_backup.sh"
+  when: env == "prod"
 
 - name: Add the Crontab Entry
   ansible.builtin.cron:
