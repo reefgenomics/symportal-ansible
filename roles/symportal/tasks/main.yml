@@ -51,11 +51,37 @@
     src: run_docker.sh.j2
     dest: "/opt/{{ env }}/symportal-2.0/run_docker.sh"
 
-- name: Render Backup Script
+- name: Render DB Backup Script
   ansible.builtin.template:
     src: db_backup.sh.j2
     dest: "/mnt/{{ env }}/db_backups/db_backup.sh"
   when: env == "prod"
+  tags:
+    - backups
+
+- name: Copy Synology Backup Script
+  ansible.builtin.copy:
+    src: synology_backup.sh
+    dest: "/mnt/synology_backup.sh"
+  when: env == "prod"
+  tags:
+    - backups
+
+- name: Copy DB Backups Removal Script
+  ansible.builtin.copy:
+    src: rm_old_db_backups.sh
+    dest: "/mnt/{{ env }}/db_backups/rm_old_db_backups.sh"
+  when: env == "prod"
+  tags:
+    - backups
+
+- name: Copy Synology Backups Removal Script
+  ansible.builtin.copy:
+    src: rm_old_db_backups.sh
+    dest: /mnt/rm_old_synology_backups.sh
+  when: env == "prod"
+  tags:
+    - backups
 
 - name: Add the Crontab Entry
   ansible.builtin.cron:
@@ -65,12 +91,62 @@
     hour: 0
     job: "/mnt/{{ env }}/db_backups/db_backup.sh"
   when: env == "prod"
+  tags:
+    - backups
 
 - name: Configure logrotate
   ansible.builtin.copy:
     src: "postgresql-backup"
     dest: "/etc/logrotate.d/postgresql-backup"
   when: env == "prod"
+  tags:
+    - backups
+
+- name: Create DB Backup Cron Job
+  cron:
+    name: "DB Backup"
+    minute: "0"
+    hour: "0"
+    job: "/mnt/prod/db_backups/db_backup.sh"
+    user: "root"
+  when: env == "prod"
+  tags:
+    - backups
+
+- name: Create Remove Old DB Backups Cron Job
+  cron:
+    name: "Remove Old DB Backups"
+    minute: "0"
+    hour: "0"
+    weekday: "0"
+    job: "/mnt/prod/db_backups/rm_old_db_backups.sh"
+    user: "root"
+  when: env == "prod"
+  tags:
+    - backups
+
+- name: Create Synology Backup Cron Job
+  cron:
+    name: "Synology Backup"
+    minute: "0"
+    hour: "0"
+    job: "/mnt/synology_backup.sh"
+    user: "root"
+  when: env == "prod"
+  tags:
+    - backups
+
+- name: Create Remove Old Synology Backups Cron Job
+  cron:
+    name: "Remove Old Synology Backups"
+    minute: "0"
+    hour: "0"
+    weekday: "0"
+    job: "/mnt/rm_old_synology_backups.sh"
+    user: "root"
+  when: env == "prod"
+  tags:
+    - backups
 
 #- name: Create and Start Docker Compose Services
 #  community.docker.docker_compose:
